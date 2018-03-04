@@ -1,4 +1,4 @@
-package org.bfsip.eureka;
+package org.bfsip.zuul;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,30 +6,30 @@ import java.util.Properties;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 
-@EnableEurekaServer
 @SpringBootApplication
-public class EurekaApplication {
+@EnableZuulProxy
+public class GatewayZuulApplication {
 
 	protected static final String DEF_PROP_FILE = "application.properties";
 	
 	public static void main(String[] args) throws IOException {
-		run(args);
-	}
-	
-	protected static void run(String[] args) throws IOException{
-		SpringApplication app = new SpringApplication(EurekaApplication.class);
+		SpringApplication app = new SpringApplication(GatewayZuulApplication.class);
 		app.setDefaultProperties(getDefProperties());
 		app.run(args);
 	}
 	
+	//@Bean
+	public GatewayZuulFilter gatewayZuulFilter(){
+		return new GatewayZuulFilter();
+	}
+	
 	protected static Properties getDefProperties() throws IOException{
 		Properties p = new Properties();
-		InputStream in = EurekaApplication.class.getClassLoader().getResourceAsStream(DEF_PROP_FILE);
+		InputStream in = GatewayZuulApplication.class.getClassLoader().getResourceAsStream(DEF_PROP_FILE);
 		p.load(in);
 		
 		return p;
 	}
-	
 }
