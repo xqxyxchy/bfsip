@@ -5,14 +5,15 @@ import java.util.regex.Pattern;
 
 import org.bfsip.common.constants.StringPool;
 
-/**
- * 字符串验证工具类。
- * 
- * <pre>
- * 作者：eddy
- * 邮箱：1546077710@qq.com
- * 日期：2018年3月1日-下午6:15:38
- * 版权：
+/** 
+ * 字符串验证工具类
+ *
+ * <pre> 
+ * project: bfsip-common
+ * author: eddy
+ * email: xqxyxchy@126.com
+ * date: 2018年3月5日-下午9:02:52
+ * rights: eddy
  * </pre>
  */
 public class StringValidator {

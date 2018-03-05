@@ -7,16 +7,16 @@ import java.util.regex.Pattern;
 
 import org.bfsip.common.constants.StringPool;
 
-/**
+/** 
  * 字符串工具类。 可以先找{@link org.apache.commons.lang3.StringUtils }的方法)
- * 
- * <pre>
- * 作者：eddy
- * 邮箱：1546077710@qq.com
- * 日期：2018年3月1日-下午6:15:38
- * 版权：
+ *
+ * <pre> 
+ * project: bfsip-common
+ * author: eddy
+ * email: xqxyxchy@126.com
+ * date: 2018年3月5日-下午9:02:31
+ * rights: eddy
  * </pre>
- * 
  */
 public class StringUtil extends org.apache.commons.lang3.StringUtils {
 	

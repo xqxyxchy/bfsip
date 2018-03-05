@@ -1,13 +1,14 @@
 package org.bfsip.common.constants;
 
-/**
- * 常用的变量。
+/** 
+ * 常用的变量
  *
  * <pre> 
- * 作者：eddy
- * 邮箱：1546077710@qq.com
- * 日期：2018年3月1日-下午6:15:38
- * 版权：
+ * project: bfsip-common
+ * author: eddy
+ * email: xqxyxchy@126.com
+ * date: 2018年3月5日-下午9:01:15
+ * rights: eddy
  * </pre>
  */
 public interface StringPool {
@@ -192,6 +193,11 @@ public interface StringPool {
 	/** 小写 */
 	String LOWER = "lower";
 	
-	/** token */
+	/** access_token */
 	String TOKEN = "access_token";
+	/** isSuccess */
+	String IS_SUCCESS = "isSuccess";
+	/** from_gateway */
+	String FROM_GATEWAY = "from_gateway";
+	
 }

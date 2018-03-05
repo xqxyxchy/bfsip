@@ -8,6 +8,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
+/** 
+ * 服务注册中心-主类
+ *
+ * <pre> 
+ * project: bfsip-eureka
+ * author: eddy
+ * email: xqxyxchy@126.com
+ * date: 2018年3月5日-下午9:03:14
+ * rights: eddy
+ * </pre>
+ */
 @EnableEurekaServer
 @SpringBootApplication
 public class EurekaApplication {

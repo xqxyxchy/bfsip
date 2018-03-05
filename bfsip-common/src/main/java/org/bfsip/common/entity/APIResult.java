@@ -6,10 +6,16 @@ import java.util.Map;
 
 import org.bfsip.common.utils.JacksonUtil;
 
-/**
+/** 
  * 所有服务统一返回数据的数据对象
- * @author eddy
  *
+ * <pre> 
+ * project: bfsip-common
+ * author: eddy
+ * email: xqxyxchy@126.com
+ * date: 2018年3月5日-下午9:01:32
+ * rights: eddy
+ * </pre>
  */
 public class APIResult implements Serializable {
 
@@ -114,9 +120,13 @@ public class APIResult implements Serializable {
 		this.data = data;
 	}
 
+	public String toJsonString(){
+		return JacksonUtil.toJsonString(this);
+	}
+	
 	@Override
 	public String toString() {
-		return JacksonUtil.toJsonString(this);
+		return toJsonString();
 	}
 	
 }

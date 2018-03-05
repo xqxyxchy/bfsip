@@ -9,33 +9,36 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
+/** 
+ * 工具服务-主类
+ *
+ * <pre> 
+ * project: bfsip-tools
+ * author: eddy
+ * email: xqxyxchy@126.com
+ * date: 2018年3月5日-下午9:05:04
+ * rights: eddy
+ * </pre>
+ */
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		DataSourceTransactionManagerAutoConfiguration.class })
-public class ProviderApplication {
+public class ToolProviderApplication {
 
 	protected static final String DEF_PROP_FILE = "application.properties";
 
 	public static void main(String[] args) throws IOException {
-		SpringApplication app = new SpringApplication(ProviderApplication.class);
+		SpringApplication app = new SpringApplication(ToolProviderApplication.class);
 		app.setDefaultProperties(getDefProperties());
 		app.run(args);
 	}
 
-	//@Bean
-	public FilterRegistrationBean myFilter() {
-		FilterRegistrationBean myFilter = new FilterRegistrationBean();
-		myFilter.addUrlPatterns("/*");
-		return myFilter;
-	}
-
 	protected static Properties getDefProperties() throws IOException {
 		Properties p = new Properties();
-		InputStream in = ProviderApplication.class.getClassLoader().getResourceAsStream(DEF_PROP_FILE);
+		InputStream in = ToolProviderApplication.class.getClassLoader().getResourceAsStream(DEF_PROP_FILE);
 		p.load(in);
 
 		return p;

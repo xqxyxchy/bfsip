@@ -2,14 +2,15 @@ package org.bfsip.common.utils;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
-/**
- * 字符串编码转换器。
- * 
- * <pre>
- * 作者：eddy
- * 邮箱：1546077710@qq.com
- * 日期：2018年3月1日-下午6:15:38
- * 版权：
+/** 
+ * 字符串编码转换器
+ *
+ * <pre> 
+ * project: bfsip-common
+ * author: eddy
+ * email: xqxyxchy@126.com
+ * date: 2018年3月5日-下午9:02:20
+ * rights: eddy
  * </pre>
  */
 public class StringEscaper {

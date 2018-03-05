@@ -1,59 +1,50 @@
-package org.bfsip.zuul;
+package org.bfsip.zuul.filter;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.netflix.zuul.ZuulFilter;
+import org.bfsip.common.constants.StringPool;
+import org.bfsip.common.entity.APIResult;
+import org.bfsip.common.utils.StringUtil;
+
 import com.netflix.zuul.context.RequestContext;
 
-/**
+/** 
  * zuul还提供了一类特殊的过滤器，分别为：StaticResponseFilter和SurgicalDebugFilter
  * StaticResponseFilter：StaticResponseFilter允许从Zuul本身生成响应，而不是将请求转发到源。
  * SurgicalDebugFilter：SurgicalDebugFilter允许将特定请求路由到分隔的调试集群或主机。
- * 
+ *
  * <pre> 
- * 作者：eddy
- * 邮箱：1546077710@qq.com
- * 日期：2018年3月4日-下午2:38:19
- * 版权：eddy
+ * project: bfsip-zuul
+ * author: eddy
+ * email: xqxyxchy@126.com
+ * date: 2018年3月5日-下午9:04:33
+ * rights: eddy
  * </pre>
  */
-public class GatewayZuulFilter extends ZuulFilter {
+public class DefaultZuulFilter extends com.netflix.zuul.ZuulFilter {
 
 	//@Override
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
 
-		String accessToken = request.getParameter("access_token");
-		if (null != accessToken) {
+		String accessToken = request.getParameter(StringPool.TOKEN);
+		if (StringUtil.isNotBlank(accessToken)) {
 			ctx.setSendZuulResponse(true);
 			ctx.setResponseStatusCode(200);
-			ctx.set("isSuccess", true);
-			request.setAttribute("from_gateway", true);
+			ctx.set(StringPool.IS_SUCCESS, true);
+			request.setAttribute(StringPool.FROM_GATEWAY, true);
 			return null;
 		} else {
 			ctx.setSendZuulResponse(false);
 			ctx.setResponseStatusCode(401);
 			
-			StringBuilder builder = new StringBuilder();
-			builder.append("{");
-			builder.append("\"");
-			builder.append("result");
-			builder.append("\"");
-			builder.append(":");
-			builder.append("1");
-			builder.append(",");
-			builder.append("\"");
-			builder.append("cause");
-			builder.append("\"");
-			builder.append(":");
-			builder.append("\"");
-			builder.append("access token is not correct!");
-			builder.append("\"");
-			builder.append("}");
+			APIResult result = new APIResult();
+			result.setResult(APIResult.FAIL);
+			result.setCause("access token is not correct!");
 			
-			ctx.setResponseBody(builder.toString());
-			ctx.set("isSuccess", false);
+			ctx.setResponseBody(result.toJsonString());
+			ctx.set(StringPool.IS_SUCCESS, false);
 			return null;
 		}
 	}
@@ -66,7 +57,7 @@ public class GatewayZuulFilter extends ZuulFilter {
 		 * 如果前一个过滤器的结果为false，则说明上一个过滤器没有成功，则无需进行下面的过滤动作了，直接跳过后面的所有过滤器并返回结果;
 		 */
 		
-		return ctx.containsKey("isSuccess") && null != ctx.get("isSuccess") && Boolean.valueOf(ctx.get("isSuccess").toString());
+		return ctx.containsKey(StringPool.IS_SUCCESS) && null != ctx.get(StringPool.IS_SUCCESS) && Boolean.valueOf(ctx.get(StringPool.IS_SUCCESS).toString());
 	}
 
 	@Override

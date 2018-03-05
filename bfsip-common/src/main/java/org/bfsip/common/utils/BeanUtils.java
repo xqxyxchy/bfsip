@@ -23,14 +23,15 @@ import org.apache.commons.beanutils.converters.LongConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * BeanUtils的帮助类。
- *BeanUtils的等价类，只是将check exception改为uncheck exception。
+/** 
+ * BeanUtils的等价类，只是将check exception改为uncheck exception
+ *
  * <pre> 
- * 作者：eddy
- * 邮箱：1546077710@qq.com
- * 日期：2018年3月1日-下午6:15:38
- * 版权：
+ * project: bfsip-common
+ * author: eddy
+ * email: xqxyxchy@126.com
+ * date: 2018年3月5日-下午9:01:47
+ * rights: eddy
  * </pre>
  */
 public class BeanUtils {

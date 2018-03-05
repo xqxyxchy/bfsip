@@ -3,6 +3,7 @@ package org.bfsip.common.utils;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 import org.bfsip.common.constants.StringPool;
@@ -17,11 +18,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 /** 
  * json工具类-Jackson，标准json格式key必须使用双引号<code>"</code>
+ *
  * <pre> 
- * 作者：eddy
- * 邮箱：1546077710@qq.com
- * 日期：2018年3月1日-下午6:15:38
- * 版权：
+ * project: bfsip-common
+ * author: eddy
+ * email: xqxyxchy@126.com
+ * date: 2018年3月5日-下午9:00:57
+ * rights: eddy
  * </pre>
  */
 public class JacksonUtil {
@@ -167,6 +170,49 @@ public class JacksonUtil {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	/**
+	 * 从json字符串中获取指定key的对应值-Object
+	 *
+	 * @param jsonStr
+	 * @param key
+	 * @return 
+	 */
+	@SuppressWarnings("unchecked")
+	public static Object get(String jsonStr, String key){
+		Map<String, Object> dataMap = getDTO(jsonStr, Map.class);
+		return dataMap.get(key);
+	}
+	
+	/**
+	 * 从json字符串转为Map
+	 *
+	 * @param jsonStr
+	 * @return 
+	 */
+	@SuppressWarnings("unchecked")
+	public static Map<String, Object> get(String jsonStr){
+		return getDTO(jsonStr, Map.class);
+	}
+	
+	/**
+	 * 从json字符串中获取指定key的对应值-字符串
+	 *
+	 * @param jsonStr
+	 * @param key
+	 * @return 
+	 */
+	@SuppressWarnings("unchecked")
+	public static String getString(String jsonStr, String key){
+		Map<String, Object> dataMap = getDTO(jsonStr, Map.class);
+		
+		Object data = dataMap.get(key);
+		if(BeanUtils.isEmpty(data)) return null;
+		
+		if(data instanceof String) data.toString();
+		
+		return toJsonString(dataMap.get(key));
 	}
 	
 	/**
