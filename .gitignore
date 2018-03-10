@@ -22,12 +22,8 @@
 hs_err_pid*
 
 # workspace
-.metadata
 .metadata/
-RemoteSystemsTempFiles
 RemoteSystemsTempFiles/
-Servers
 Servers/
-.recommenders
 .recommenders/
 codetemplates.xml
