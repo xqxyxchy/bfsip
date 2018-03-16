@@ -84,7 +84,7 @@ public class StringValidator {
 	}
 	
 	/**
-	 * 邮编
+	 * 身份证号码
 	 * 
 	 * @param s
 	 * @return

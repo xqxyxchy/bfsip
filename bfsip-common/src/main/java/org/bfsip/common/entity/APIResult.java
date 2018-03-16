@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.bfsip.common.utils.JacksonUtil;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /** 
  * 所有服务统一返回数据的数据对象
  *
@@ -77,6 +79,7 @@ public class APIResult implements Serializable {
 		this.result = result;
 	}
 	
+	@JsonIgnore
 	public boolean isSuccess(){
 		return SUCCESS == result;
 	}
