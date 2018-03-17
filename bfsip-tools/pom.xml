@@ -46,6 +46,10 @@
 			<groupId>org.bfsip</groupId>
 			<artifactId>bfsip-common</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.bfsip</groupId>
+			<artifactId>bfsip-auth-client</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

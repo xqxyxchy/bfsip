@@ -1,6 +1,10 @@
 package org.bfsip.zuul.filter;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.bfsip.common.constants.StringPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netflix.zuul.context.RequestContext;
 
@@ -19,12 +23,19 @@ import com.netflix.zuul.context.RequestContext;
  */
 public class AccessFilter extends com.netflix.zuul.ZuulFilter {
 
+	private Logger logger = LoggerFactory.getLogger(getClass());
+	
 	@Override
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
 
 		ctx.set(StringPool.IS_SUCCESS, true);
 		ctx.set(StringPool.FROM_GATEWAY, true);
+		
+		HttpServletRequest request = ctx.getRequest();
+		if(logger.isDebugEnabled()){
+			logger.debug("Request to {}.", request.getRequestURL().toString());
+		}
 		
 		return null;
 	}

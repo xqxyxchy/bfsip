@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.bfsip.auth.client.filter.AccessClientFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.Bean;
 
 /** 
  * 工具服务-主类
@@ -43,5 +46,15 @@ public class ToolProviderApplication {
 
 		return p;
 	}
+	
+	@Bean
+    public FilterRegistrationBean MyFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new AccessClientFilter());
+        registration.addUrlPatterns("/*");
+        registration.setName("AccessClientFilter");
+        registration.setOrder(1);
+        return registration;
+    }
 
 }
