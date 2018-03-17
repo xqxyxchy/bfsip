@@ -19,12 +19,17 @@ import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.bfsip.common.constants.StringPool;
+import org.bfsip.common.entity.APIResult;
+import org.bfsip.common.utils.BeanUtils;
 import org.bfsip.common.utils.FileUtil;
 import org.bfsip.common.utils.JacksonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** 
  * Identity Card Number validator.
@@ -47,6 +52,8 @@ public class IdentityValidator {
 	// 身份证第18位校检码
 	private static final String[] REF_NUMBER = {"1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"};
 	
+	private static final Logger logger = LoggerFactory.getLogger(IdentityValidator.class);
+	
 	/**
 	 * 校验是否合法身份证号码
 	 *
@@ -60,37 +67,83 @@ public class IdentityValidator {
 				&& checkIdNoLastNum(idNo);
 	}
 	
+	public static APIResult getResult(String idNo){
+		APIResult result = new APIResult();
+		if(!verify(idNo)){
+			result.setResult(APIResult.FAIL);
+			result.setCause("非法身份证号码！");
+			return result;
+		}
+		
+		try {
+			String message = parse(idNo);
+			result.setResult(APIResult.SUCCESS);
+			result.setCause(message);
+		} catch (ParseException ignore) {
+			result.setResult(APIResult.FAIL);
+			result.setCause("出生年月日异常！");
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 获取身份证信息
+	 *
+	 * @param idNo	待解析身份证号码
+	 * @return 
+	 */
 	public static String getMeesage(String idNo){
 		if(!verify(idNo)){
 			return "非法身份证号码！";
 		}
 		
 		try {
-			StringBuilder builder = new StringBuilder();
-			
-			String sex = idNo.substring(16, 17);
-			int sexint = Integer.valueOf(sex);
-			int mode = sexint % 2;
-			String sexmessage = mode == 1 ? "男" : "女";
-			builder.append("此人为").append(sexmessage).append("性").append(";");
-			
-			String ind = idNo.substring(6, 14);
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-			Date indate = dateFormat.parse(ind);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-			String indatemsg = sdf.format(indate);
-			builder.append("于").append(indatemsg).append(";");
-			
-			String pid = idNo.substring(0, 6);
-			Map<String, String> map = getProvinceMap();
-			String text = map.get(pid);
-			builder.append("出生在").append(text).append(";");
-			
-			return builder.toString();
+			return parse(idNo);
 		} catch (ParseException ignore) {
 		}
 		
 		return "出生年月日异常！";
+	}
+
+	private static String parse(String idNo) throws ParseException {
+		StringBuilder builder = new StringBuilder();
+		
+		String sex = idNo.substring(16, 17);
+		if(logger.isDebugEnabled()){
+			logger.debug("No. 17 is {}.", sex);
+		}
+		
+		int sexint = Integer.valueOf(sex);
+		int mode = sexint % 2;
+		String sexmessage = mode == 1 ? "男" : "女";
+		builder.append("此人为").append(sexmessage).append("性").append(";");
+		
+		String ind = idNo.substring(6, 14);
+		if(logger.isDebugEnabled()){
+			logger.debug("The birthday is {}.", ind);
+		}
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		Date indate = dateFormat.parse(ind);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+		String indatemsg = sdf.format(indate);
+		builder.append("于").append(indatemsg).append(";");
+		
+		String pid = idNo.substring(0, 6);
+		Map<String, String> map = getProvinceMapFromJson();
+		String text = map.get(pid);
+		if(logger.isDebugEnabled()){
+			logger.debug("The province code is {} and name is {}.", pid, text);
+		}
+		
+		builder.append("出生在").append(text).append(";");
+		
+		if(logger.isDebugEnabled()){
+			logger.debug(builder.toString());
+		}
+		
+		return builder.toString();
 	}
 	
 	/**
@@ -187,6 +240,15 @@ public class IdentityValidator {
 		return REF_NUMBER[(result % 11)];
 	}
 	
+	private static Map<String, String> getProvinceMap(){
+		Map<String, String> map = getProvinceMapFromJson();
+		if(BeanUtils.isEmpty(map)){
+			map = getProvinceMapFromTxt();
+		}
+		
+		return BeanUtils.isEmpty(map) ? new HashMap<String, String>() : map;
+	}
+	
 	/**
 	 * 获取文件流
 	 *
@@ -210,12 +272,41 @@ public class IdentityValidator {
 	 * @return 
 	 */
 	@SuppressWarnings("unchecked")
-	private static Map<String, String> getProvinceMap(){
+	private static Map<String, String> getProvinceMapFromJson(){
 		InputStream is = getInputStream(IdentityValidator.class, ".json");
 		String content = FileUtil.readFile(is, StringPool.UTF_8, true);
 		Map<String, String> map = JacksonUtil.getDTO(content, Map.class);
 		
 		return map;
+	}
+	
+	/**
+	 * 获取省市县编码
+	 *
+	 * @return 
+	 */
+	private static Map<String, String> getProvinceMapFromTxt(){
+		InputStream is = getInputStream(IdentityValidator.class, ".txt");
+		String content = FileUtil.readFile(is, StringPool.UTF_8, true);
+		
+		Map<String, String> map = new HashMap<String, String>();
+		String[] arr = content.split("\r\n");
+		String[] tmp = null;
+		for(String line : arr){
+			tmp = line.split(" ");
+			if(tmp.length == 2){
+				map.put(tmp[0], tmp[1]);
+			}
+		}
+		
+		return map;
+	}
+	
+	public static void main(String[] args) {
+		Map<String, String> maptxt = getProvinceMapFromTxt();
+		System.out.println(JacksonUtil.toJsonString(maptxt));
+		Map<String, String> mapjson = getProvinceMapFromJson();
+		System.out.println(JacksonUtil.toJsonString(mapjson));
 	}
 	
 }

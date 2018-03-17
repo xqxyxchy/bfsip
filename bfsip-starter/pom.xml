@@ -32,6 +32,10 @@
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<commons-lang3.version>3.5</commons-lang3.version>
 		<commons-lang.version>2.6</commons-lang.version>
+		
+		<javax-servlet-api.version>3.1.0</javax-servlet-api.version>
+		<servlet-api.version>2.5</servlet-api.version>
+		<jsp-api.version>2.1</jsp-api.version>
 	</properties>
 
 	<dependencyManagement>
@@ -39,6 +43,16 @@
 			<dependency>
 				<groupId>org.bfsip</groupId>
 				<artifactId>bfsip-common</artifactId>
+				<version>${bfsip.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bfsip</groupId>
+				<artifactId>bfsip-auth-server</artifactId>
+				<version>${bfsip.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bfsip</groupId>
+				<artifactId>bfsip-auth-client</artifactId>
 				<version>${bfsip.version}</version>
 			</dependency>
 			
@@ -80,6 +94,22 @@
 				<groupId>commons-lang</groupId>
 				<artifactId>commons-lang</artifactId>
 				<version>${commons-lang.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>${servlet-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>${javax-servlet-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet.jsp</groupId>
+				<artifactId>jsp-api</artifactId>
+				<version>${jsp-api.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

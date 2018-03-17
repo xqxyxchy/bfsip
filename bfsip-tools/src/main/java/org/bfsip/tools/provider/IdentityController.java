@@ -57,15 +57,7 @@ public class IdentityController {
 	
 	@RequestMapping("verify/{number}")
 	public String save(@PathVariable("number") String number){
-		boolean verify = IdentityValidator.verify(number);
-		
-		APIResult result = new APIResult(APIResult.SUCCESS);
-		if(!verify){
-			result = new APIResult(APIResult.FAIL);
-		}
-		
-		String message = IdentityValidator.getMeesage(number);
-		result.setMessage(message);
+		APIResult result = IdentityValidator.getResult(number);
 		
 		return result.toString();
 	}

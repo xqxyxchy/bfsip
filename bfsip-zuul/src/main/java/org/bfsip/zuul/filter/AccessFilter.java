@@ -1,10 +1,6 @@
 package org.bfsip.zuul.filter;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.bfsip.common.constants.StringPool;
-import org.bfsip.common.entity.APIResult;
-import org.bfsip.common.utils.StringUtil;
 
 import com.netflix.zuul.context.RequestContext;
 
@@ -21,35 +17,19 @@ import com.netflix.zuul.context.RequestContext;
  * rights: eddy
  * </pre>
  */
-public class DefaultZuulFilter extends com.netflix.zuul.ZuulFilter {
+public class AccessFilter extends com.netflix.zuul.ZuulFilter {
 
-	//@Override
+	@Override
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
-		HttpServletRequest request = ctx.getRequest();
 
-		String accessToken = request.getParameter(StringPool.TOKEN);
-		if (StringUtil.isNotBlank(accessToken)) {
-			ctx.setSendZuulResponse(true);
-			ctx.setResponseStatusCode(200);
-			ctx.set(StringPool.IS_SUCCESS, true);
-			request.setAttribute(StringPool.FROM_GATEWAY, true);
-			return null;
-		} else {
-			ctx.setSendZuulResponse(false);
-			ctx.setResponseStatusCode(401);
-			
-			APIResult result = new APIResult();
-			result.setResult(APIResult.FAIL);
-			result.setCause("access token is not correct!");
-			
-			ctx.setResponseBody(result.toJsonString());
-			ctx.set(StringPool.IS_SUCCESS, false);
-			return null;
-		}
+		ctx.set(StringPool.IS_SUCCESS, true);
+		ctx.set(StringPool.FROM_GATEWAY, true);
+		
+		return null;
 	}
 
-	//@Override
+	@Override
 	public boolean shouldFilter() {
 		RequestContext ctx = RequestContext.getCurrentContext();
 		/*
