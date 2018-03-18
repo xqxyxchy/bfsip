@@ -28,27 +28,30 @@ public class AccessFilter extends com.netflix.zuul.ZuulFilter {
 	@Override
 	public Object run() {
 		RequestContext ctx = RequestContext.getCurrentContext();
-
-		ctx.set(StringPool.IS_SUCCESS, true);
-		ctx.set(StringPool.FROM_GATEWAY, true);
+		ctx.setSendZuulResponse(true);
+		ctx.setResponseStatusCode(200);
+		// 传给服务方过滤器的参数
+		ctx.addZuulRequestHeader(StringPool.FROM_GATEWAY, StringPool.Y);
+		// 传给网关后续过滤器的参数
+		ctx.set(StringPool.IS_SUCCESS, StringPool.Y);
 		
-		HttpServletRequest request = ctx.getRequest();
 		if(logger.isDebugEnabled()){
+			HttpServletRequest request = ctx.getRequest();
 			logger.debug("Request to {}.", request.getRequestURL().toString());
 		}
 		
 		return null;
 	}
 
+	/**
+	 * <pre>
+	 * 如果前一个过滤器的结果为true，则说明上一个过滤器成功了，需要进入当前的过滤;
+	 * 如果前一个过滤器的结果为false，则说明上一个过滤器没有成功，则无需进行下面的过滤动作了，直接跳过后面的所有过滤器并返回结果;
+	 * </pre>
+	 */
 	@Override
 	public boolean shouldFilter() {
-		RequestContext ctx = RequestContext.getCurrentContext();
-		/*
-		 * 如果前一个过滤器的结果为true，则说明上一个过滤器成功了，需要进入当前的过滤;
-		 * 如果前一个过滤器的结果为false，则说明上一个过滤器没有成功，则无需进行下面的过滤动作了，直接跳过后面的所有过滤器并返回结果;
-		 */
-		
-		return ctx.containsKey(StringPool.IS_SUCCESS) && null != ctx.get(StringPool.IS_SUCCESS) && Boolean.valueOf(ctx.get(StringPool.IS_SUCCESS).toString());
+		return true;
 	}
 
 	@Override

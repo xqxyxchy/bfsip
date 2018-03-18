@@ -1110,7 +1110,7 @@ public class FileUtil {
 	public static File[] list2Array(List<File> files){
 		File[] rs = null;
 		
-		if(BeanUtils.isEmpty(files)){
+		if(BeanUtil.isEmpty(files)){
 			return rs;
 		}
 		
@@ -1150,13 +1150,13 @@ public class FileUtil {
 		if(level < 0){
 			if(StringPool.ASTERISK.equals(endWith)){
 				rsFiles = parent.listFiles();
-				if(BeanUtils.isNotEmpty(rsFiles)){
+				if(BeanUtil.isNotEmpty(rsFiles)){
 					for(File file : rsFiles){
 						if(file.isFile()){
 							rsList.add(file);
 						}else{
 							tempRsList = list(file.getAbsolutePath(), endWith, -1);
-							if(BeanUtils.isNotEmpty(tempRsList)){
+							if(BeanUtil.isNotEmpty(tempRsList)){
 								rsList.addAll(tempRsList);
 							}
 						}
@@ -1168,7 +1168,7 @@ public class FileUtil {
 						return pathname.isFile() && pathname.getName().endsWith(endWith);
 					}
 				});
-				if(BeanUtils.isNotEmpty(rsFiles)){
+				if(BeanUtil.isNotEmpty(rsFiles)){
 					rsList.addAll(Arrays.asList(rsFiles));
 				}
 				
@@ -1177,10 +1177,10 @@ public class FileUtil {
 						return pathname.isDirectory();
 					}
 				});
-				if(BeanUtils.isNotEmpty(tempRsFiles)){
+				if(BeanUtil.isNotEmpty(tempRsFiles)){
 					for(File file : tempRsFiles){
 						tempRsList = list(file.getAbsolutePath(), endWith, -1);
-						if(BeanUtils.isNotEmpty(tempRsList)){
+						if(BeanUtil.isNotEmpty(tempRsList)){
 							rsList.addAll(tempRsList);
 						}
 					}
@@ -1189,13 +1189,13 @@ public class FileUtil {
 		}else{
 			if(StringPool.ASTERISK.equals(endWith)){
 				rsFiles = parent.listFiles();
-				if(BeanUtils.isNotEmpty(rsFiles)){
+				if(BeanUtil.isNotEmpty(rsFiles)){
 					for(File file : rsFiles){
 						if(file.isFile()){
 							rsList.add(file);
 						}else{
 							tempRsList = list(file.getAbsolutePath(), endWith, level - 1);
-							if(BeanUtils.isNotEmpty(tempRsList)){
+							if(BeanUtil.isNotEmpty(tempRsList)){
 								rsList.addAll(tempRsList);
 							}
 						}
@@ -1207,7 +1207,7 @@ public class FileUtil {
 						return pathname.isFile() && pathname.getName().endsWith(endWith);
 					}
 				});
-				if(BeanUtils.isNotEmpty(rsFiles)){
+				if(BeanUtil.isNotEmpty(rsFiles)){
 					rsList.addAll(Arrays.asList(rsFiles));
 				}
 				
@@ -1216,10 +1216,10 @@ public class FileUtil {
 						return pathname.isDirectory();
 					}
 				});
-				if(BeanUtils.isNotEmpty(tempRsFiles)){
+				if(BeanUtil.isNotEmpty(tempRsFiles)){
 					for(File file : tempRsFiles){
 						tempRsList = list(file.getAbsolutePath(), endWith, level - 1);
-						if(BeanUtils.isNotEmpty(tempRsList)){
+						if(BeanUtil.isNotEmpty(tempRsList)){
 							rsList.addAll(tempRsList);
 						}
 					}

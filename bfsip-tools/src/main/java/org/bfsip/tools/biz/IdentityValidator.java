@@ -25,15 +25,18 @@ import java.util.regex.Pattern;
 
 import org.bfsip.common.constants.StringPool;
 import org.bfsip.common.entity.APIResult;
-import org.bfsip.common.utils.BeanUtils;
+import org.bfsip.common.utils.BeanUtil;
 import org.bfsip.common.utils.FileUtil;
 import org.bfsip.common.utils.JacksonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** 
- * Identity Card Number validator.
- *
+ * <pre> 
+ * Chinese identity card validator.
+ * 中国居民身份证号码校验器。
+ * </pre>
+ * 
  * <pre> 
  * project: bfsip-tools
  * author: eddy
@@ -108,26 +111,37 @@ public class IdentityValidator {
 
 	private static String parse(String idNo) throws ParseException {
 		StringBuilder builder = new StringBuilder();
+		StringBuilder builderEn = new StringBuilder();
 		
 		String sex = idNo.substring(16, 17);
 		if(logger.isDebugEnabled()){
-			logger.debug("No. 17 is {}.", sex);
+			logger.debug("The 17th number is {}.", sex);
+			logger.debug("第17位是{}。", sex);
 		}
 		
 		int sexint = Integer.valueOf(sex);
 		int mode = sexint % 2;
 		String sexmessage = mode == 1 ? "男" : "女";
+		String sexmessageen =mode == 1 ? "male" : "female";
+		if(logger.isDebugEnabled()){
+			logger.debug("The sex is {}.", sexmessageen);
+			logger.debug("性别{}。", sexmessage);
+		}
+		
+		builderEn.append("This person is ").append(sexmessageen).append(";");
 		builder.append("此人为").append(sexmessage).append("性").append(";");
 		
 		String ind = idNo.substring(6, 14);
 		if(logger.isDebugEnabled()){
 			logger.debug("The birthday is {}.", ind);
+			logger.debug("生日是{}。", ind);
 		}
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		Date indate = dateFormat.parse(ind);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
 		String indatemsg = sdf.format(indate);
+		builderEn.append("The birthday is ").append(ind).append(";");
 		builder.append("于").append(indatemsg).append(";");
 		
 		String pid = idNo.substring(0, 6);
@@ -135,11 +149,14 @@ public class IdentityValidator {
 		String text = map.get(pid);
 		if(logger.isDebugEnabled()){
 			logger.debug("The province code is {} and name is {}.", pid, text);
+			logger.debug("省市区编码是{}，对应地区是{}。", pid, text);
 		}
 		
+		builderEn.append("Born in ").append(text).append(";");
 		builder.append("出生在").append(text).append(";");
 		
 		if(logger.isDebugEnabled()){
+			logger.debug(builder.toString());
 			logger.debug(builder.toString());
 		}
 		
@@ -242,11 +259,11 @@ public class IdentityValidator {
 	
 	private static Map<String, String> getProvinceMap(){
 		Map<String, String> map = getProvinceMapFromJson();
-		if(BeanUtils.isEmpty(map)){
+		if(BeanUtil.isEmpty(map)){
 			map = getProvinceMapFromTxt();
 		}
 		
-		return BeanUtils.isEmpty(map) ? new HashMap<String, String>() : map;
+		return BeanUtil.isEmpty(map) ? new HashMap<String, String>() : map;
 	}
 	
 	/**

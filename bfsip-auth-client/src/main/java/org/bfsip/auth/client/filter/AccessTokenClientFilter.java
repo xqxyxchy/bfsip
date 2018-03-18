@@ -13,10 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.bfsip.common.constants.StringPool;
 import org.bfsip.common.entity.APIResult;
+import org.bfsip.common.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class AccessClientFilter implements Filter {
+public class AccessTokenClientFilter implements Filter {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	
@@ -31,19 +32,18 @@ public class AccessClientFilter implements Filter {
 		httpRequest.setCharacterEncoding(StringPool.UTF_8);
 		httpResponse.setCharacterEncoding(StringPool.UTF_8);
 		
-		String fromGateway = httpRequest.getHeader(StringPool.FROM_GATEWAY);
-	    
 	    if(logger.isDebugEnabled()){
 			logger.debug("Request to {}.", httpRequest.getRequestURI());
-			logger.debug("FromGateway is {}.", fromGateway);
 		}
 	    
-        if(!StringPool.Y.equalsIgnoreCase(fromGateway)){
+	    String accessToken = request.getParameter(StringPool.TOKEN);
+		if (StringUtil.isBlank(accessToken)) {
         	APIResult result = new APIResult();
         	result.setResult(APIResult.FAIL);
         	result.setCause("非法请求！");
         	response.getWriter().print(result.toString());
         }else{
+        	//TODO 校验token是否合法
         	chain.doFilter(request, response);
         }
 	}

@@ -52,8 +52,6 @@ public class ToolProviderApplication {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new AccessClientFilter());
         registration.addUrlPatterns("/*");
-        registration.setName("AccessClientFilter");
-        registration.setOrder(1);
         return registration;
     }
 

@@ -29,35 +29,38 @@ public class AccessTokenFilter extends com.netflix.zuul.ZuulFilter {
 		HttpServletRequest request = ctx.getRequest();
 
 		String accessToken = request.getParameter(StringPool.TOKEN);
-		if (StringUtil.isNotBlank(accessToken)) {
-			ctx.setSendZuulResponse(true);
-			ctx.setResponseStatusCode(200);
-			ctx.set(StringPool.IS_SUCCESS, true);
-			ctx.set(StringPool.FROM_GATEWAY, true);
-			return null;
-		} else {
+		if (StringUtil.isBlank(accessToken)) {
 			ctx.setSendZuulResponse(false);
 			ctx.setResponseStatusCode(401);
-			
+			// 生成响应信息
 			APIResult result = new APIResult();
 			result.setResult(APIResult.FAIL);
 			result.setCause("access token is not correct!");
-			
 			ctx.setResponseBody(result.toJsonString());
-			ctx.set(StringPool.IS_SUCCESS, false);
-			return null;
+			// 传给网关后续过滤器的参数
+			ctx.set(StringPool.IS_SUCCESS, StringPool.N);
+		} else {
+			ctx.setSendZuulResponse(true);
+			ctx.setResponseStatusCode(200);
+			// 传给网关后续过滤器的参数
+			ctx.set(StringPool.IS_SUCCESS, StringPool.Y);
 		}
+		return null;
 	}
 
+	/**
+	 * <pre>
+	 * 如果前一个过滤器的结果为true，则说明上一个过滤器成功了，需要进入当前的过滤;
+	 * 如果前一个过滤器的结果为false，则说明上一个过滤器没有成功，则无需进行下面的过滤动作了，直接跳过后面的所有过滤器并返回结果;
+	 * </pre>
+	 */
 	@Override
 	public boolean shouldFilter() {
 		RequestContext ctx = RequestContext.getCurrentContext();
-		/*
-		 * 如果前一个过滤器的结果为true，则说明上一个过滤器成功了，需要进入当前的过滤;
-		 * 如果前一个过滤器的结果为false，则说明上一个过滤器没有成功，则无需进行下面的过滤动作了，直接跳过后面的所有过滤器并返回结果;
-		 */
 		
-		return ctx.containsKey(StringPool.IS_SUCCESS) && null != ctx.get(StringPool.IS_SUCCESS) && Boolean.valueOf(ctx.get(StringPool.IS_SUCCESS).toString());
+		return ctx.containsKey(StringPool.IS_SUCCESS) 
+				&& null != ctx.get(StringPool.IS_SUCCESS) 
+				&& StringPool.Y.equalsIgnoreCase(ctx.get(StringPool.IS_SUCCESS).toString());
 	}
 
 	@Override

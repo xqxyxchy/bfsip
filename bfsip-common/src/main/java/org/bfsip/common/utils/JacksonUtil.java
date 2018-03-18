@@ -71,7 +71,7 @@ public class JacksonUtil {
 	 * @return
 	 */
 	public static boolean isEmpty(Object o) {
-		return BeanUtils.isEmpty(o);
+		return BeanUtil.isEmpty(o);
 	}
 
 	/**
@@ -208,7 +208,7 @@ public class JacksonUtil {
 		Map<String, Object> dataMap = getDTO(jsonStr, Map.class);
 		
 		Object data = dataMap.get(key);
-		if(BeanUtils.isEmpty(data)) return null;
+		if(BeanUtil.isEmpty(data)) return null;
 		
 		if(data instanceof String) data.toString();
 		

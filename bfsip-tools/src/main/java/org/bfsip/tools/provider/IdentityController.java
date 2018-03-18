@@ -52,7 +52,7 @@ import org.springframework.web.bind.annotation.RestController;
  * </pre>
  */
 @RestController
-@RequestMapping("/tool/identity/")
+@RequestMapping("/identity/")
 public class IdentityController {
 	
 	@RequestMapping("verify/{number}")

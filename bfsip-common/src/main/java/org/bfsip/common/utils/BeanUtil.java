@@ -34,11 +34,11 @@ import org.slf4j.LoggerFactory;
  * rights: eddy
  * </pre>
  */
-public class BeanUtils {
+public class BeanUtil {
 	
-	private static final Logger logger = LoggerFactory.getLogger(BeanUtils.class);
+	private static final Logger logger = LoggerFactory.getLogger(BeanUtil.class);
 	
-	private BeanUtils(){}
+	private BeanUtil(){}
 	
 	/**
 	 * BeanUtil类型转换器
